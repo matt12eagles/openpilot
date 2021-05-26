@@ -12,6 +12,7 @@
 #include "selfdrive/common/swaglog.h"
 #include "selfdrive/common/timing.h"
 #include "selfdrive/common/util.h"
+#include <math.h>
 
 #include "selfdrive/sensord/sensors/constants.h"
 #define VISION_DECIMATION 2
@@ -29,6 +30,7 @@ public:
   void reset_kalman(double current_time = NAN);
   void reset_kalman(double current_time, Eigen::VectorXd init_orient, Eigen::VectorXd init_pos);
   void finite_check(double current_time = NAN);
+  void time_check(double current_time = NAN);
 
   kj::ArrayPtr<capnp::byte> get_message_bytes(MessageBuilder& msg_builder, uint64_t logMonoTime,
     bool inputsOK, bool sensorsOK, bool gpsOK);
@@ -53,6 +55,7 @@ private:
   bool calibrated = false;
 
   double car_speed = 0.0;
+  double last_reset_time = NAN;
   std::deque<double> posenet_stds;
 
   std::unique_ptr<LocalCoord> converter;
